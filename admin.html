@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        .refresh-btn {
+            display: block;
+            width: 100px;
+            margin: 20px auto;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .refresh-btn:hover {
+            background: #218838;
+        }
+        .view-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .view-btn:hover {
+            background-color: #0056b3;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        #billDetails {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+    <style>
+        #billDetails {
+            display: none; /* Hide by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel - Bill Records</h1>
+        <button class="refresh-btn" onclick="fetchBills()">Refresh</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Payment Method</th>
+                    <th>Total Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bills-table-body">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+        <!-- Div to Show Bill Details -->
+        <div id="billDetails" class="container">
+            <h2>Bill Details</h2>
+            <div id="billContent"></div>
+            <button class="back-btn" onclick="showBillList()">Back to Bill List</button>
+        </div>
+    </div>
+    <script>
+        // Fetch bills from the backend and populate the table
+        function fetchBills() {
+            fetch("http://127.0.0.1:5000/api/get_bills")
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("bills-table-body");
+                    tableBody.innerHTML = "";
+
+                    data.forEach(bill => {
+                        const row = `<tr>
+                            <td>${bill.id}</td>
+                            <td>${bill.customer}</td>
+                            <td>${bill.payment_method || 'N/A'}</td>
+                            <td>₹${bill.total_amount}</td>
+                            <td><button onclick="viewBill(${bill.id})" class="view-btn">View Bill</button></td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching bills:", error);
+                    alert("Failed to fetch bills. Please try again.");
+                });
+        }
+
+        // Fetch and display details of a specific bill
+        function viewBill(billId) {
+            fetch(`http://127.0.0.1:5000/api/get_bill/${billId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const billContent = document.getElementById("billContent");
+                    billContent.innerHTML = 
+                    `   <p><strong>Bill ID:</strong> ${data.id}</p>
+                        <p><strong>Customer:</strong> ${data.customer}</p>
+                        <p><strong>Payment Method:</strong> ${data.payment_method || "Not Provided"}</p>
+                        <p><strong>Total Amount:</strong> ₹${data.total_amount}</p>
+                        <p><strong>Date:</strong> ${data.bill_date ? new Date(data.bill_date).toLocaleString() : "Not Available"}</p>
+                        <h3>Purchased Items</h3>
+                        <ul>
+                            ${data.products.map(item => `
+                                <li>${item.product_name} - ${item.quantity} x ₹${(item.total_price / item.quantity).toFixed(2)} = ₹${item.total_price}</li>
+                            `).join("")}
+                        </ul>
+                    `;
+                    document.getElementById("billDetails").style.display = "block";
+                })
+                .catch(error => {
+                    console.error("Error fetching bill details:", error);
+                    alert("Failed to fetch bill details. Please try again.");
+                });
+        }
+
+        // Hide bill details and show the bill list
+        function showBillList() {
+            document.getElementById("billDetails").style.display = "none";
+        }
+
+        // Fetch bills when the page loads
+        window.onload = fetchBills;
+    </script>
+</body>
+</html>
