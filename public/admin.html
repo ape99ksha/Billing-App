@@ -119,7 +119,7 @@
     <script>
         // Fetch bills from the backend and populate the table
         function fetchBills() {
-            fetch("http://127.0.0.1:5000/api/get_bills")
+            fetch("http://localhost:8080/api/")
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.getElementById("bills-table-body");
@@ -144,7 +144,7 @@
 
         // Fetch and display details of a specific bill
         function viewBill(billId) {
-            fetch(`http://127.0.0.1:5000/api/get_bill/${billId}`)
+            fetch(`http://localhost:8080/api/${billId}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
@@ -155,9 +155,9 @@
                     const billContent = document.getElementById("billContent");
                     billContent.innerHTML = 
                     `   <p><strong>Bill ID:</strong> ${data.id}</p>
-                        <p><strong>Customer:</strong> ${data.customer}</p>
-                        <p><strong>Payment Method:</strong> ${data.payment_method || "Not Provided"}</p>
-                        <p><strong>Total Amount:</strong> ₹${data.total_amount}</p>
+                        <p><strong>Customer:</strong> ${data.customerName}</p>
+                        <p><strong>Payment Method:</strong> ${data.paymentMethod || "Not Provided"}</p>
+                        <p><strong>Total Amount:</strong> ₹${data.totalAmount}</p>
                         <p><strong>Date:</strong> ${data.bill_date ? new Date(data.bill_date).toLocaleString() : "Not Available"}</p>
                         <h3>Purchased Items</h3>
                         <ul>
