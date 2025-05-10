@@ -3,26 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <title>Sanghamitra - Bill Records</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            background: #f5f5f5;
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            height: 80px;
+            width: auto;
         }
         h1 {
-            text-align: center;
-            color: #333;
+            color: #15196a;
+            margin: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #56b423;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4a9e1d;
+        }
+        #backBtn {
+            background-color: #003366;
+        }
+        #backBtn:hover {
+            background-color: #002244;
         }
         table {
             width: 100%;
@@ -31,156 +65,266 @@
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
+            padding: 12px;
+            text-align: left;
         }
         th {
             background-color: #003366;
-            color: white;
+            color: #fff;
         }
-        .refresh-btn {
-            display: block;
-            width: 100px;
-            margin: 20px auto;
-            padding: 10px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
         }
-        .refresh-btn:hover {
-            background: #218838;
-        }
-        .view-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .view-btn:hover {
-            background-color: #0056b3;
-        }
-        .back-btn {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .back-btn:hover {
-            background-color: #5a6268;
-        }
-        .button-container {
+        .search-container {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            gap: 10px;
         }
-        #billDetails {
-            margin-top: 20px;
+        input[type="text"], input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .stat-card {
+            text-align: center;
+            padding: 10px;
+            min-width: 150px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #003366;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        .product-details {
             display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
         }
-    </style>
-    <style>
-        #billDetails {
-            display: none; /* Hide by default */
+        .toggle-details {
+            color: #56b423;
+            text-decoration: underline;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Admin Panel - Bill Records</h1>
-        <button class="refresh-btn" onclick="fetchBills()">Refresh</button>
-        <table>
+    <div class="admin-container">
+        <div class="header">
+            <button id="backBtn" onclick="window.location.href='index.html';">Back to Billing</button>
+            <h1>SANGHAMITRA - Bill Records</h1>
+            <img src="sanghamitra logo.jpeg" alt="Sanghamitra Logo" class="logo">
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalBills">0</div>
+                <div class="stat-label">Total Bills</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalAmount">₹0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="cashAmount">₹0</div>
+                <div class="stat-label">Cash Payments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="onlineAmount">₹0</div>
+                <div class="stat-label">Online Payments</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search by customer name...">
+                <input type="date" id="dateFilter">
+                <button id="resetBtn">Reset</button>
+            </div>
+            <button id="refreshBtn">Refresh Data</button>
+        </div>
+
+        <table id="billsTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Customer</th>
+                    <th>Bill ID</th>
+                    <th>Date</th>
+                    <th>Customer Name</th>
+                    <th>Items</th>
                     <th>Payment Method</th>
                     <th>Total Amount</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="bills-table-body">
-                <!-- Data will be inserted here dynamically -->
+            <tbody id="billsTableBody">
+                <!-- Data will be loaded here -->
             </tbody>
         </table>
-        <!-- Div to Show Bill Details -->
-        <div id="billDetails" class="container">
-            <h2>Bill Details</h2>
-            <div id="billContent"></div>
-            <button class="back-btn" onclick="showBillList()">Back to Bill List</button>
-        </div>
     </div>
+
     <script>
-        // Fetch bills from the backend and populate the table
-        function fetchBills() {
-            fetch("http://localhost:8080/api/")
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById("bills-table-body");
-                    tableBody.innerHTML = "";
+        // Fetch all bills from the API
+        async function fetchBills() {
+            try {
+                const response = await fetch('http://localhost:8080/api/');
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ${response.status}');
+                }
+                const bills = await response.json();
+                displayBills(bills);
+                updateStats(bills);
+            } catch (error) {
+                console.error('Error fetching bills:', error);
+                alert('Failed to load bills. Error: ${error.message}');
+            }
+        }
 
-                    data.forEach(bill => {
-                        const row = `<tr>
-                            <td>${bill.id}</td>
-                            <td>${bill.customer}</td>
-                            <td>${bill.payment_method || 'N/A'}</td>
-                            <td>₹${bill.total_amount}</td>
-                            <td><button onclick="viewBill(${bill.id})" class="view-btn">View Bill</button></td>
-                        </tr>`;
-                        tableBody.innerHTML += row;
-                    });
-                })
-                .catch(error => {
-                    console.error("Error fetching bills:", error);
-                    alert("Failed to fetch bills. Please try again.");
+        // Display bills in the table
+        function displayBills(bills) {
+            const tableBody = document.getElementById('billsTableBody');
+            tableBody.innerHTML = '';
+
+            if (bills.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="7" style="text-align: center;">No bills found</td>`;
+                tableBody.appendChild(row);
+                return;
+            }
+
+            bills.forEach(bill => {
+                const row = document.createElement('tr');
+                const date = new Date(bill.createdAt || bill.date || Date.now()).toLocaleString();
+                
+                // Count the number of unique products
+                const itemCount = bill.products ? bill.products.length : 0;
+                
+                row.innerHTML = `
+                    <td>${bill._id || bill.id || 'N/A'}</td>
+                    <td>${date}</td>
+                    <td>${bill.customerName || 'N/A'}</td>
+                    <td>${itemCount} items <span class="toggle-details" onclick="toggleDetails(this)">(show details)</span>
+                        <div class="product-details">
+                            ${bill.products ? bill.products.map(p => `
+                                <div>${p.product} - ${p.category} (Qty: ${p.quantity}, ₹${p.price}, Disc: ${p.discount}%)</div>
+                            `).join('') : 'No products'}
+                        </div>
+                    </td>
+                    <td>${bill.paymentMethod || 'N/A'}</td>
+                    <td>₹${bill.totalAmount ? bill.totalAmount.toFixed(2) : '0.00'}</td>
+                    <td>
+                        <button onclick="deleteBill('${bill._id || bill.id}')">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Toggle product details visibility
+        function toggleDetails(element) {
+            const detailsDiv = element.nextElementSibling;
+            if (detailsDiv.style.display === 'block') {
+                detailsDiv.style.display = 'none';
+                element.textContent = '(show details)';
+            } else {
+                detailsDiv.style.display = 'block';
+                element.textContent = '(hide details)';
+            }
+        }
+
+        // Update statistics cards
+        function updateStats(bills) {
+            const totalBills = bills.length;
+            const totalAmount = bills.reduce((sum, bill) => sum + (bill.totalAmount || 0), 0);
+            const cashBills = bills.filter(bill => bill.paymentMethod === 'Cash');
+            const cashAmount = cashBills.reduce((sum, bill) => sum + (bill.totalAmount || 0), 0);
+            const onlineBills = bills.filter(bill => bill.paymentMethod === 'Online');
+            const onlineAmount = onlineBills.reduce((sum, bill) => sum + (bill.totalAmount || 0), 0);
+
+            document.getElementById('totalBills').textContent = totalBills;
+            document.getElementById('totalAmount').textContent = `₹${totalAmount.toFixed(2)}`;
+            document.getElementById('cashAmount').textContent = `₹${cashAmount.toFixed(2)}`;
+            document.getElementById('onlineAmount').textContent = `₹${onlineAmount.toFixed(2)}`;
+        }
+
+        // Delete a bill
+        async function deleteBill(billId) {
+            if (!confirm('Are you sure you want to delete this bill?')) return;
+            
+            try {
+                const response = await fetch(`http://localhost:8080/api/${billId}`, {
+                    method: 'DELETE'
                 });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete bill');
+                }
+                
+                alert('Bill deleted successfully');
+                fetchBills(); // Refresh the list
+            } catch (error) {
+                console.error('Error deleting bill:', error);
+                alert('Error deleting bill. Check console for details.');
+            }
         }
 
-        // Fetch and display details of a specific bill
-        function viewBill(billId) {
-            fetch(`http://localhost:8080/api/${billId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const billContent = document.getElementById("billContent");
-                    billContent.innerHTML = 
-                    `   <p><strong>Bill ID:</strong> ${data.id}</p>
-                        <p><strong>Customer:</strong> ${data.customerName}</p>
-                        <p><strong>Payment Method:</strong> ${data.paymentMethod || "Not Provided"}</p>
-                        <p><strong>Total Amount:</strong> ₹${data.totalAmount}</p>
-                        <p><strong>Date:</strong> ${data.bill_date ? new Date(data.bill_date).toLocaleString() : "Not Available"}</p>
-                        <h3>Purchased Items</h3>
-                        <ul>
-                            ${data.products.map(item => `
-                                <li>${item.product_name} - ${item.quantity} x ₹${(item.total_price / item.quantity).toFixed(2)} = ₹${item.total_price}</li>
-                            `).join("")}
-                        </ul>
-                    `;
-                    document.getElementById("billDetails").style.display = "block";
-                })
-                .catch(error => {
-                    console.error("Error fetching bill details:", error);
-                    alert("Failed to fetch bill details. Please try again.");
-                });
-        }
+        // Search bills by customer name
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#billsTableBody tr');
+            
+            rows.forEach(row => {
+                const customerName = row.cells[2].textContent.toLowerCase();
+                if (customerName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
 
-        // Hide bill details and show the bill list
-        function showBillList() {
-            document.getElementById("billDetails").style.display = "none";
-        }
+        // Filter bills by date
+        document.getElementById('dateFilter').addEventListener('change', function() {
+            const selectedDate = new Date(this.value).setHours(0, 0, 0, 0);
+            if (isNaN(selectedDate)) return;
+            
+            const rows = document.querySelectorAll('#billsTableBody tr');
+            
+            rows.forEach(row => {
+                const billDate = new Date(row.cells[1].textContent).setHours(0, 0, 0, 0);
+                if (billDate === selectedDate) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
 
-        // Fetch bills when the page loads
-        window.onload = fetchBills;
+        // Reset filters
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('dateFilter').value = '';
+            const rows = document.querySelectorAll('#billsTableBody tr');
+            rows.forEach(row => row.style.display = '');
+        });
+
+        // Refresh data
+        document.getElementById('refreshBtn').addEventListener('click', fetchBills);
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', fetchBills);
     </script>
 </body>
 </html>
