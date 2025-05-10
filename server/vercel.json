@@ -1,0 +1,19 @@
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "server.js"
+    }
+  ],
+  "env": {
+    "DATABASE": "mongodb+srv://apeksha:HelloWorld_1999@cluster0.wmxce.mongodb.net/billingapp"
+  }
+}
