@@ -182,6 +182,9 @@
                             <option value="Frames">Frames</option>
                             <option value="Tshirt">Tshirt</option>
                             <option value="Bags">Bags</option>
+                            <option value="Books">Books</option>
+                            <option value="Mugs">Mugs</option>
+                            <option value="Prints">Prints</option>
                         </select>
                     </td>
                     <td>
@@ -247,10 +250,24 @@
         // Product data structure
         const productData = {
             Frames: {
-                "Anti-caste Bookseller": 500,
-                "Jotiba and Savitri": 600,
-                "Babasaheb's People": 730,
-                "Reading with Babasaheb": 500
+                "Adivasi Geographic by Jayesh Lakhama Vayeda":500,
+                "Anti-caste Bookseller by Nidhin Shobhana":500,
+                "Anti-Caste Movement is a Verb by Nidhin Shobhana":500,
+                "Atta Deep Bhav by Buddhist Cultural Art":500,
+                "Atta hi Attano Natho by Buddhist Cultural Art":500,
+                "Attasila Samadanam by Buddhist Cultural Art":500,
+                "Babasaheb and the Dhamma by Priyanka Rohan Patil":500,
+                "Babasaheb by Sonali Meshram":500,
+                "Babasaheb gave us the Path by Priyanka Rohan Patil":500,
+                "Babasaheb, champion of women’s rights by Priyanka Rohan Patil":500,
+                "Beauty by Kshitij Mahendra":500,
+                "Bhima Koregaon: Our War Cry!":500,
+                "Buddha at the Jetavana by Priyanka Rohan Patil":500,
+                "Buddha by Sonali Meshram":500,
+                "Dhamek Stupa by Sushil Patil":500,
+                "Dr. B. R. Ambedkar by Priyanka Rohan Patil":500,
+                "Freedom by Kshitij Mahendra":500,
+                "In Quest of Equality by The Shared Mirror":500
             },
             Tshirt: {
                 "Elephant": 200, 
@@ -262,12 +279,56 @@
             },
             Bags: {
                 "Black Rexin Bag": 200, 
-                "Brown Rexin Bag": 300, 
+                "Brown Rexin Bag": 200, 
                 "Bottle Bag": 200,
                 "Blue Butterfly (Big Bag)": 200, 
                 "Red Big Flower (Big Bag)": 200,
                 "Blue Butterfly (Small Bag)": 200, 
                 "Red Big Flower (Small Bag)": 200
+            },
+            Books :{
+                "Cast & Class":500, 
+                "Ews":500, 
+                "Gujrati":500, 
+                "In Quest of Equality by The Shared Mirror":500, 
+                "Mahad":500, 
+                "Hatred In The Belly by The Shared Mirror":500, 
+                "Bhima Koregaon":500, 
+                "The River Speaks":500, 
+                "What Babasaheb Ambedkar Means":500, 
+                "Navayana Buddhism":500, 
+                "A Dyslexic's Life":500, 
+                "Kanshi Ram Ji Ki Sohbat Mein":500, 
+                "Mai Kanshi Ram Bol Raha Hu":500, 
+                "Savari":500
+            },
+            Mugs : {
+                "Elephant": 200, 
+                "Chameleon": 200, 
+                "Lion Cub": 200, 
+                "Lioness": 200, 
+                "Sitting Baby Wolf": 200, 
+                "Wolf Standing": 200
+            },
+            Prints : {
+                "Adivasi Geographic by Jayesh Lakhama Vayeda":500,
+                "Anti-caste Bookseller by Nidhin Shobhana":500,
+                "Anti-Caste Movement is a Verb by Nidhin Shobhana":500,
+                "Atta Deep Bhav by Buddhist Cultural Art":500,
+                "Atta hi Attano Natho by Buddhist Cultural Art":500,
+                "Attasila Samadanam by Buddhist Cultural Art":500,
+                "Babasaheb and the Dhamma by Priyanka Rohan Patil":500,
+                "Babasaheb by Sonali Meshram":500,
+                "Babasaheb gave us the Path by Priyanka Rohan Patil":500,
+                "Babasaheb, champion of women’s rights by Priyanka Rohan Patil":500,
+                "Beauty by Kshitij Mahendra":500,
+                "Bhima Koregaon: Our War Cry!":500,
+                "Buddha at the Jetavana by Priyanka Rohan Patil":500,
+                "Buddha by Sonali Meshram":500,
+                "Dhamek Stupa by Sushil Patil":500,
+                "Dr. B. R. Ambedkar by Priyanka Rohan Patil":500,
+                "Freedom by Kshitij Mahendra":500,
+                "In Quest of Equality by The Shared Mirror":500
             }
         };
 
@@ -325,6 +386,10 @@
                         <option value="Frames">Frames</option>
                         <option value="Tshirt">Tshirt</option>
                         <option value="Bags">Bags</option>
+                        <option value="Books">Books</option>
+                        <option value="Mugs">Mugs</option>
+                        <option value="Prints">Prints</option>
+
                     </select>
                 </td>
                 <td>
@@ -498,7 +563,7 @@
 
         // Initialize the page with one product row
         document.addEventListener('DOMContentLoaded', function() {
-            addProductRow();
+            calculateGrandTotal();
         });
     </script>
 </body>
